@@ -4,21 +4,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import com.example.semestralnapracaenviro.ui.welcome.WelcomeScreen
 
 @Composable
 fun AppNavHost(
     navController : NavHostController,
     modifier: Modifier = Modifier,
-    startDestination: String = ScreenRoute.WELCOME.route
 ) {
     NavHost(
         navController = navController,
-        startDestination = ScreenRoute.WELCOME.route,
+        startDestination = ScreenRoute.WELCOME.route,   // startovacia obrazovka
         modifier = modifier
     ) {
+        composable(ScreenRoute.WELCOME.route) {
+            WelcomeScreen(navController = navController)
+        }
 
+        // sem pridam dalsie cesty k ostatnym obrazovkam
 
     }
-
-
 }
