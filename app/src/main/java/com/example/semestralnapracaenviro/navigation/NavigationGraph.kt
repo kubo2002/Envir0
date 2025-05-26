@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.semestralnapracaenviro.ui.register.RegisterScreen
 import com.example.semestralnapracaenviro.ui.welcome.WelcomeScreen
 
 @Composable
@@ -23,5 +24,12 @@ fun AppNavHost(
 
         // sem pridam dalsie cesty k ostatnym obrazovkam
 
+        composable(ScreenRoute.REGISTRATION.route) {
+            RegisterScreen(navController = navController)
+        }
+
+        composable(ScreenRoute.LOGIN.route) {
+            WelcomeScreen(navController = navController)
+        }
     }
 }

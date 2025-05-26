@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "461622193619",
+    "project_id": "envir0-b2a83",
+    "storage_bucket": "envir0-b2a83.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461622193619:android:0a943b2c5b43c6e1af5326",
+        "android_client_info": {
+          "package_name": "com.example.semestralnapracaenviro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDB7rC2a8Ub-lsAjG5rGuIuDQDJ5DacZUk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
