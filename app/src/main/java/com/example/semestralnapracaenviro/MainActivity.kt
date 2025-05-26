@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.example.semestralnapracaenviro.navigation.AppNavHost
 import com.example.semestralnapracaenviro.ui.theme.SemestralnaPracaEnviroTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,29 +21,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SemestralnaPracaEnviroTheme {
+                val navController = rememberNavController()
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                    AppNavHost(
+                        navController = navController,
+                        modifier = Modifier.padding(innerPadding) // startovaciu screen uz mam tento krat definovanu v nav grafe
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SemestralnaPracaEnviroTheme {
-        Greeting("Android")
     }
 }
