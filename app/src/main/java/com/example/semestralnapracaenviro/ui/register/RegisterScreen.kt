@@ -41,7 +41,7 @@ fun RegisterScreen (
         if (status != null) {
             Toast.makeText(context, status, Toast.LENGTH_LONG).show()
             if (status.startsWith("Registrácia úspešná")) {
-                navController.navigate(ScreenRoute.LOGIN.route) {
+                navController.navigate(ScreenRoute.MAINSCREEN.route) {
                     popUpTo(navController.graph.startDestinationId) { inclusive = true }
                     launchSingleTop = true
                 }
