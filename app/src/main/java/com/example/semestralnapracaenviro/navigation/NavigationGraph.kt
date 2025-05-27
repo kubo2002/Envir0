@@ -39,7 +39,7 @@ fun AppNavHost(
         }
 
         composable(ScreenRoute.REPORT.route) {
-            MainScreen(navController = navController)
+            ReportDumpScreen(navController = navController)
         }
 
     }
