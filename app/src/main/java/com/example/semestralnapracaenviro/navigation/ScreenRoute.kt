@@ -4,5 +4,5 @@ enum class ScreenRoute(val route: String){
     REGISTRATION("registration"),
     LOGIN("login"),
     WELCOME("welcome"),
-    MAINSCREEN("mainscreen");
+    MAINSCREEN("mainscreen")
 }
