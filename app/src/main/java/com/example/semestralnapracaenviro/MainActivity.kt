@@ -14,10 +14,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.semestralnapracaenviro.navigation.AppNavHost
 import com.example.semestralnapracaenviro.ui.theme.SemestralnaPracaEnviroTheme
+import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
         enableEdgeToEdge()
         setContent {
             SemestralnaPracaEnviroTheme {
