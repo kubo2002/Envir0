@@ -9,7 +9,7 @@ import com.example.semestralnapracaenviro.ui.home.MainScreen
 import com.example.semestralnapracaenviro.ui.login.LoginScreen
 import com.example.semestralnapracaenviro.ui.register.RegisterScreen
 import com.example.semestralnapracaenviro.ui.welcome.WelcomeScreen
-
+import com.example.semestralnapracaenviro.ui.report.ReportDumpScreen
 @Composable
 fun AppNavHost(
     navController : NavHostController,
@@ -41,6 +41,5 @@ fun AppNavHost(
         composable(ScreenRoute.REPORT.route) {
             ReportDumpScreen(navController = navController)
         }
-
     }
 }

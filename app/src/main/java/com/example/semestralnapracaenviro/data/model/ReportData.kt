@@ -1,35 +1,17 @@
 package com.example.semestralnapracaenviro.data.model
 
-import com.google.android.gms.maps.model.LatLng
-import com.google.firebase.firestore.GeoPoint // Alternatíva pre Firestore, ak nepoužívate LatLng priamo
-import com.google.firebase.firestore.ServerTimestamp // Pre serverovú časovú značku
-import java.util.Date // Pre ServerTimestamp
+import com.example.semestralnapracaenviro.data.model.AccessibilityLevel
+import com.google.firebase.firestore.GeoPoint
 
-data class DumpSite(
+data class ReportData (
     val id: String = "",
-    val positionLatLng: LatLng? = null,
-    val positionGeoPoint: GeoPoint? = null,
+    val description: String = "",
+    val accessibility: AccessibilityLevel = AccessibilityLevel.EASY,
+    val location: GeoPoint? = null,
+    val reportedBy: String? = null,
+    val timestamp: Long = System.currentTimeMillis()
 
-    val title: String = "",
-    val description: String? = null,
-    val reportedBy: String? = null, // UID používateľa
-    val timestamp: Long? = null,
-
-    @ServerTimestamp
-    val createdAt: Date? = null, // Firestore automaticky vyplní pri vytváraní dokumentu
-    val photoUrl: String? = null,
-    val status: String = "reported" // napr. "reported", "cleaned_scheduled", "cleaned"
 ) {
-    constructor() : this(
-        id = "",
-        positionLatLng = null,
-        positionGeoPoint = null,
-        title = "",
-        description = null,
-        reportedBy = null,
-        timestamp = null,
-        createdAt = null,
-        photoUrl = null,
-        status = "reported"
-    )
+    // Prázdny konštruktor pre Firestore
+    constructor() : this("", "", AccessibilityLevel.EASY, null, null, 0L)
 }
