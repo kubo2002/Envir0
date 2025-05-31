@@ -1,74 +1,177 @@
-package com.example.semestralnapracaenviro.viewmodels
+package com.example.semestralnapracaenviro.viewmodels // Alebo váš správny balíček
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Application // Potrebné pre AndroidViewModel
 import android.content.Context
-import androidx.lifecycle.ViewModel
+import android.content.pm.PackageManager
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.AndroidViewModel // Použijeme AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.semestralnapracaenviro.data.model.AccessibilityLevel
+// Uistite sa, že názov dátovej triedy je správny
+import com.example.semestralnapracaenviro.data.model.ReportData
+import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class ReportViewModel : ViewModel() {
-    private val _currentLocation = MutableStateFlow<LatLng?>(null)
-    val currentLocation: StateFlow<LatLng?> = _currentLocation
+class ReportViewModel(application: Application) : AndroidViewModel(application) {
 
-    private var fusedLocationClient: FusedLocationProviderClient? = null
-    private lateinit var locationCallback: LocationCallback
+    var description by mutableStateOf("")
+    var selectedAccessibility by mutableStateOf(AccessibilityLevel.EASY)
+
+    var currentDeviceLocation by mutableStateOf<LatLng?>(null)
+        private set
+    var isFetchingLocation by mutableStateOf(false)
+        private set
+
+    var submissionStatus by mutableStateOf<String?>(null)
+        private set
+    var isSubmitting by mutableStateOf(false)
+        private set
+
+    private val db = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
+
+
+    private val fusedLocationClient: FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(application.applicationContext)
+
+    companion object {
+        private const val TAG =
+            "ReportViewModel"
+    }
 
 
     @SuppressLint("MissingPermission")
-    fun startLocationUpdates(context: Context) {
-        if (fusedLocationClient == null) {
-            fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+    fun fetchCurrentDeviceLocation() {
+        val appContext = getApplication<Application>().applicationContext
+
+
+        if (ContextCompat.checkSelfPermission(
+                appContext,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(
+                appContext,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.w(TAG, "fetchCurrentDeviceLocation volané bez potrebných povolení.")
+            submissionStatus = "Pre získanie polohy sú potrebné povolenia." // Informujeme cez stav
+
+            isFetchingLocation = false
+            return
         }
 
-        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
-            .setMinUpdateIntervalMillis(5000)
+        if (isFetchingLocation) {
+            Log.d(TAG, "Už prebieha získavanie polohy.")
+            return
+        }
+
+        isFetchingLocation = true
+        currentDeviceLocation = null
+
+        val locationRequest = CurrentLocationRequest.Builder()
+            .setPriority(Priority.PRIORITY_LOW_POWER)
             .build()
 
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: com.google.android.gms.location.LocationResult) {
-                locationResult.lastLocation?.let { location ->
-                    _currentLocation.value = LatLng(location.latitude, location.longitude)
+        fusedLocationClient.getCurrentLocation(
+            locationRequest,
+            null
+        )
+            .addOnSuccessListener { location ->
+                if (location != null) {
+                    currentDeviceLocation = LatLng(location.latitude, location.longitude)
+                    Log.d(
+                        TAG,
+                        "Aktuálna poloha zariadenia získaná: ${currentDeviceLocation?.latitude}, ${currentDeviceLocation?.longitude}"
+                    )
+
+                } else {
+                    Log.w(TAG, "Nepodarilo sa získať aktuálnu polohu (location is null).")
+                    submissionStatus =
+                        "Nepodarilo sa získať aktuálnu polohu." // Informujeme cez stav
 
                 }
+                isFetchingLocation = false
             }
-        }
-    }
-    fun stopLocationUpdates() {
-        fusedLocationClient?.removeLocationUpdates(locationCallback)
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Chyba pri získavaní aktuálnej polohy zariadenia", e)
+                submissionStatus =
+                    "Chyba pri získavaní polohy: ${e.message}" // Informujeme cez stav
+
+                isFetchingLocation = false
+            }
     }
 
+    fun submitReport() {
+        val appContext = getApplication<Application>().applicationContext
 
-    @SuppressLint("MissingPermission")
-    fun getLastKnownLocation(context: Context, onResult: (LatLng?) -> Unit) {
-        if (fusedLocationClient == null) {
-            fusedLocationClient = com.google.android.gms.location.LocationServices.getFusedLocationProviderClient(context)
+        if (description.isBlank()) {
+            submissionStatus = "Popis skládky je povinný."
+
+            return
         }
+        if (currentDeviceLocation == null) {
+            submissionStatus =
+                "Poloha nie je k dispozícii. Získajte aktuálnu polohu pred odoslaním."
+
+            return
+        }
+
+        isSubmitting = true
+        submissionStatus = null
+
+        val reportData = ReportData(
+            description = description.trim(),
+            accessibility = selectedAccessibility,
+            location = GeoPoint(
+                currentDeviceLocation!!.latitude,
+                currentDeviceLocation!!.longitude
+            ),
+            reportedBy = auth.currentUser?.uid,
+            timestamp = System.currentTimeMillis()
+
+        )
+
         viewModelScope.launch {
             try {
-                val location = fusedLocationClient?.lastLocation?.await()
-                if (location != null) {
-                    onResult(LatLng(location.latitude, location.longitude))
-                } else {
-                    onResult(null)
-                }
-            } catch (e: Exception) {
 
-                onResult(null)
+                db.collection("quick_dump_reports").add(reportData).await()
+                submissionStatus = "Skládka úspešne nahlásená!"
+                Log.d(TAG, submissionStatus!!)
+
+                description = ""
+                selectedAccessibility = AccessibilityLevel.EASY
+                currentDeviceLocation = null
+            } catch (e: Exception) {
+                submissionStatus = "Chyba pri odosielaní: ${e.message}"
+                Log.e(TAG, "Error submitting report", e)
+            } finally {
+                isSubmitting = false
             }
         }
+    }
+
+    fun clearSubmissionStatus() {
+        submissionStatus = null
     }
 
     override fun onCleared() {
         super.onCleared()
-        stopLocationUpdates()
+        Log.d(TAG, "ReportViewModel cleared.")
     }
 }
