@@ -85,6 +85,17 @@ fun MainScreen(
 
             Button(
                 onClick = {
+                    navController.navigate(ScreenRoute.MAP.route) // Navigácia na MapScreen
+                },
+                modifier = Modifier.fillMaxWidth()
+
+            ) {
+                Text("Zobraziť mapu skládok")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = {
                     // TODO: Navigovať na obrazovku "Naplánované čistenia"
                     // navController.navigate(ScreenRoute.SCHEDULED_CLEANUPS.route) // Príklad
                 },

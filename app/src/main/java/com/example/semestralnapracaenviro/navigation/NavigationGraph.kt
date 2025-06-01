@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.semestralnapracaenviro.ui.home.MainScreen
 import com.example.semestralnapracaenviro.ui.login.LoginScreen
+import com.example.semestralnapracaenviro.ui.map.MapScreen
 import com.example.semestralnapracaenviro.ui.register.RegisterScreen
 import com.example.semestralnapracaenviro.ui.welcome.WelcomeScreen
 import com.example.semestralnapracaenviro.ui.report.ReportDumpScreen
@@ -40,6 +41,10 @@ fun AppNavHost(
 
         composable(ScreenRoute.REPORT.route) {
             ReportDumpScreen(navController = navController)
+        }
+
+        composable(ScreenRoute.MAP.route) {
+            MapScreen(navController = navController)
         }
     }
 }
