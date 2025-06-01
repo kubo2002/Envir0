@@ -5,16 +5,17 @@ import android.annotation.SuppressLint
 import android.app.Application // Potrebné pre AndroidViewModel
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Location
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel // Použijeme AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.semestralnapracaenviro.data.model.AccessibilityLevel
-// Uistite sa, že názov dátovej triedy je správny
 import com.example.semestralnapracaenviro.data.model.ReportData
 import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -49,6 +50,9 @@ class ReportViewModel(application: Application) : AndroidViewModel(application) 
     private val fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(application.applicationContext)
 
+    var locationError by mutableStateOf<String?>(null) // Špecifický error pre polohu
+        private set
+
     companion object {
         private const val TAG =
             "ReportViewModel"
@@ -58,64 +62,42 @@ class ReportViewModel(application: Application) : AndroidViewModel(application) 
     @SuppressLint("MissingPermission")
     fun fetchCurrentDeviceLocation() {
         val appContext = getApplication<Application>().applicationContext
-
-
-        if (ContextCompat.checkSelfPermission(
-                appContext,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(
-                appContext,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
+        if (ActivityCompat.checkSelfPermission(appContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(appContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
         ) {
-            Log.w(TAG, "fetchCurrentDeviceLocation volané bez potrebných povolení.")
-            submissionStatus = "Pre získanie polohy sú potrebné povolenia." // Informujeme cez stav
-
-            isFetchingLocation = false
-            return
-        }
-
-        if (isFetchingLocation) {
-            Log.d(TAG, "Už prebieha získavanie polohy.")
+            locationError = "Povolenia pre polohu nie sú udelené."
+            Log.w(TAG, "fetchCurrentDeviceLocationMinimal: Povolenia zamietnuté.")
             return
         }
 
         isFetchingLocation = true
+        locationError = null
         currentDeviceLocation = null
 
-        val locationRequest = CurrentLocationRequest.Builder()
-            .setPriority(Priority.PRIORITY_LOW_POWER)
-            .build()
+        Log.d(TAG, "fetchCurrentDeviceLocationMinimal: Začínam získavať polohu.")
 
-        fusedLocationClient.getCurrentLocation(
-            locationRequest,
-            null
-        )
-            .addOnSuccessListener { location ->
-                if (location != null) {
-                    currentDeviceLocation = LatLng(location.latitude, location.longitude)
-                    Log.d(
-                        TAG,
-                        "Aktuálna poloha zariadenia získaná: ${currentDeviceLocation?.latitude}, ${currentDeviceLocation?.longitude}"
-                    )
 
-                } else {
-                    Log.w(TAG, "Nepodarilo sa získať aktuálnu polohu (location is null).")
-                    submissionStatus =
-                        "Nepodarilo sa získať aktuálnu polohu." // Informujeme cez stav
-
-                }
+        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null) // null pre CancellationToken
+            .addOnSuccessListener { location: Location? ->
                 isFetchingLocation = false
+                if (location != null) {
+                    currentDeviceLocation = LatLng(location.latitude, location.longitude) // Alebo priamo location
+                    locationError = null
+                    Log.i(TAG, "fetchCurrentDeviceLocationMinimal: Poloha úspešne získaná: $currentDeviceLocation")
+                } else {
+                    currentDeviceLocation = null
+                    locationError = "Nepodarilo sa získať platnú polohu (location is null)."
+                    Log.w(TAG, "fetchCurrentDeviceLocationMinimal: Poloha je null.")
+                }
             }
             .addOnFailureListener { e ->
-                Log.e(TAG, "Chyba pri získavaní aktuálnej polohy zariadenia", e)
-                submissionStatus =
-                    "Chyba pri získavaní polohy: ${e.message}" // Informujeme cez stav
-
                 isFetchingLocation = false
+                currentDeviceLocation = null
+                locationError = "Chyba pri získavaní polohy: ${e.message}" // Používame e.message pre stručnosť
+                Log.e(TAG, "fetchCurrentDeviceLocationMinimal: Chyba pri získavaní polohy.", e)
             }
     }
+
 
     fun submitReport() {
         val appContext = getApplication<Application>().applicationContext
