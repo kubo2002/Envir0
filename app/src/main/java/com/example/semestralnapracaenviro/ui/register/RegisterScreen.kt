@@ -47,7 +47,6 @@ fun RegisterScreen (
                 }
                 regViewModel.clearForm()
             }
-            // Optional: regViewModel.registrationStatus = null
         }
     }
 
