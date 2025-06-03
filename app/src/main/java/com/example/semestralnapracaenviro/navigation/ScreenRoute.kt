@@ -6,6 +6,7 @@ enum class ScreenRoute(val route: String){
     WELCOME("welcome"),
     MAINSCREEN("mainscreen"),
     REPORT("reportDump"),
-    MAP("map")
+    MAP("map"),
+    CLEANUP("cleanup"),
 
 }

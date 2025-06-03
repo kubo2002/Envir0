@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+
 import com.example.semestralnapracaenviro.ui.home.MainScreen
 import com.example.semestralnapracaenviro.ui.login.LoginScreen
 import com.example.semestralnapracaenviro.ui.map.MapScreen
@@ -46,5 +47,7 @@ fun AppNavHost(
         composable(ScreenRoute.MAP.route) {
             MapScreen(navController = navController)
         }
+
+
     }
 }

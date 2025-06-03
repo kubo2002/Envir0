@@ -1,10 +1,11 @@
 package com.example.semestralnapracaenviro.data.model
 
-import com.example.semestralnapracaenviro.data.model.AccessibilityLevel
+import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.GeoPoint
 
 data class ReportData (
-    val id: String = "",
+    @DocumentId
+    var id: String = "",
     val description: String = "",
     val accessibility: AccessibilityLevel = AccessibilityLevel.EASY,
     val location: GeoPoint? = null,
