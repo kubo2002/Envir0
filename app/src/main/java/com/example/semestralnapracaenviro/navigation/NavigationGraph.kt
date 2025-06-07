@@ -6,12 +6,22 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 
-import com.example.semestralnapracaenviro.ui.home.MainScreen
-import com.example.semestralnapracaenviro.ui.login.LoginScreen
-import com.example.semestralnapracaenviro.ui.map.MapScreen
-import com.example.semestralnapracaenviro.ui.register.RegisterScreen
-import com.example.semestralnapracaenviro.ui.welcome.WelcomeScreen
-import com.example.semestralnapracaenviro.ui.report.ReportDumpScreen
+import com.example.semestralnapracaenviro.screens.home.MainScreen
+import com.example.semestralnapracaenviro.screens.login.LoginScreen
+import com.example.semestralnapracaenviro.screens.map.MapScreen
+import com.example.semestralnapracaenviro.screens.profile.ProfileScreen
+import com.example.semestralnapracaenviro.screens.register.RegisterScreen
+import com.example.semestralnapracaenviro.screens.welcome.WelcomeScreen
+import com.example.semestralnapracaenviro.screens.report.ReportDumpScreen
+
+/**
+ * Hlavný navigačný hostiteľ aplikácie.
+ *
+ * Zabezpečuje definovanie všetkých hlavných obrazoviek a ciest medzi nimi.
+ *
+ * @param navController Navigačný kontrolér pre riadenie prechodu medzi obrazovkami.
+ * @param modifier Modifier pre prispôsobenie vzhľadu a rozloženia navigačného hostiteľa.
+ */
 @Composable
 fun AppNavHost(
     navController : NavHostController,
@@ -19,14 +29,14 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = ScreenRoute.WELCOME.route,   // startovacia obrazovka
+        startDestination = ScreenRoute.WELCOME.route,   // Štartovacia obrazovka aplikácie
         modifier = modifier
     ) {
+        // Definícia jednotlivých ciest pre obrazovky
+
         composable(ScreenRoute.WELCOME.route) {
             WelcomeScreen(navController = navController)
         }
-
-        // sem pridam dalsie cesty k ostatnym obrazovkam
 
         composable(ScreenRoute.REGISTRATION.route) {
             RegisterScreen(navController = navController)
@@ -48,6 +58,8 @@ fun AppNavHost(
             MapScreen(navController = navController)
         }
 
-
+        composable(ScreenRoute.PROFILE.route) {
+            ProfileScreen(navController = navController)
+        }
     }
 }

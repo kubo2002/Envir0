@@ -1,7 +1,6 @@
-package com.example.semestralnapracaenviro.viewmodels
+package com.example.semestralnapracaenviro.screens.login
 
 import android.util.Log
-import androidx.activity.result.launch
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -18,6 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class LogViewModel : ViewModel() {
+
     var email by mutableStateOf("")
     var password by mutableStateOf("")
 
@@ -31,72 +31,72 @@ class LogViewModel : ViewModel() {
     private val db: FirebaseFirestore = Firebase.firestore
 
     /**
-     * Validuje vstupné polia formulára.
-     * @return true ak sú všetky povinné polia platné, inak false.
+     * Overí, či sú vstupné údaje správne zadané.
+     * @return true, ak sú vstupy validné, inak false.
      */
     private fun validateInputs(): Boolean {
-
-        // Reset predchádzajúcich chýb
         emailError = null
         passwordError = null
         var isValid = true
 
         if (email.isBlank()) {
-            emailError = "Email je povinný"
+            emailError = "Email is required"
             isValid = false
         } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailError = "Neplatný formát emailu"
+            emailError = "Invalid email format"
             isValid = false
         }
 
         if (password.isBlank()) {
-            passwordError = "Heslo je povinné"
+            passwordError = "Password is required"
             isValid = false
         } else if (password.length < 6) {
-            passwordError = "Heslo musí mať aspoň 6 znakov"
+            passwordError = "Password must be at least 6 characters"
             isValid = false
         }
 
         return isValid
     }
 
+    /**
+     * Pokúsi sa prihlásiť používateľa na základe zadaného emailu a hesla.
+     * Nastavuje stavové premenne podľa výsledku.
+     */
     fun logInUser() {
         if (!validateInputs()) {
-            isLoading = false // Ak validácia zlyhá, zastavíme načítavanie
+            isLoading = false
             return
         }
 
         isLoading = true
-        loginStatus = null // Reset statusu pred novým pokusom
+        loginStatus = null
 
         viewModelScope.launch {
             try {
                 auth.signInWithEmailAndPassword(email.trim(), password).await()
                 Log.d("LoginViewModel", "User signed in successfully.")
-                loginStatus = "Prihlásenie úspešné!"
-                // Navigácia sa bude riešiť v Composable na základe tohto statusu
+                loginStatus = "Login successful!"
 
             } catch (e: FirebaseAuthInvalidUserException) {
-                // Používateľ s týmto emailom neexistuje
                 Log.w("LoginViewModel", "Login failed: User not found.", e)
-                emailError = "Používateľ s týmto emailom neexistuje."
-                loginStatus = "Prihlásenie zlyhalo: Používateľ neexistuje."
+                emailError = "User with this email does not exist."
+                loginStatus = "Login failed: User not found."
             } catch (e: FirebaseAuthInvalidCredentialsException) {
-                // Nesprávne heslo
-                Log.w("LoginViewModel", "Login failed: Invalid credentials (wrong password).", e)
-                passwordError = "Nesprávne heslo."
-                loginStatus = "Prihlásenie zlyhalo: Nesprávne heslo."
+                Log.w("LoginViewModel", "Login failed: Invalid credentials.", e)
+                passwordError = "Incorrect password."
+                loginStatus = "Login failed: Incorrect password."
             } catch (e: Exception) {
-                // Ostatné chyby (napr. sieťové)
                 Log.e("LoginViewModel", "Login failed with exception.", e)
-                loginStatus = "Prihlásenie zlyhalo: ${e.localizedMessage ?: "Neznáma chyba"}"
+                loginStatus = "Login failed: ${e.localizedMessage ?: "Unknown error"}"
             } finally {
                 isLoading = false
             }
-
         }
     }
 
+    /**
+     * Vymaže údaje formulára a resetuje chybové hlásenia.
+     */
     fun clearForm() {
         email = ""
         password = ""
@@ -106,6 +106,9 @@ class LogViewModel : ViewModel() {
         loginStatus = null
     }
 
+    /**
+     * Vymaže stav loginStatus. Použiteľné po spracovaní správy v UI.
+     */
     fun clearLoginStatus() {
         loginStatus = null
     }

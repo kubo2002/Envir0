@@ -1,25 +1,43 @@
-package com.example.semestralnapracaenviro.viewmodels
+package com.example.semestralnapracaenviro.screens.register
 
+// Android
 import android.util.Log
+
+// Jetpack Compose
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+
+// AndroidX Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+
+// Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+
+// Kotlin
 import kotlin.text.isBlank
 import kotlin.text.isNotBlank
 import kotlin.text.toIntOrNull
 import kotlin.text.trim
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+
+// Coroutines
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+
+// Local (data model)
 import com.example.semestralnapracaenviro.data.model.UserRegRequest
 
+/**
+ * ViewModel pre obrazovku registrácie používateľa.
+ * Obsahuje stavové premenné pre vstupné polia a validáciu,
+ * logiku registrácie používateľa cez Firebase Authentication a Firestore.
+ */
 class RegViewModel : ViewModel() {
     var email by mutableStateOf("")
     var firstName by mutableStateOf("")
@@ -36,18 +54,18 @@ class RegViewModel : ViewModel() {
     var passwordError by mutableStateOf<String?>(null)
     var confirmPasswordError by mutableStateOf<String?>(null)
 
-    var registrationStatus by mutableStateOf<String?>(null) // Správa o úspechu alebo všeobecnej chybe
+    var registrationStatus by mutableStateOf<String?>(null)
     var isLoading by mutableStateOf(false)
 
-    // Inštancie Firebase služieb
     private val auth: FirebaseAuth = Firebase.auth
     private val db: FirebaseFirestore = Firebase.firestore
+    private val dbUsers = FirebaseFirestore.getInstance()
+
     /**
-     * Validuje vstupné polia formulára.
-     * @return true ak sú všetky povinné polia platné, inak false.
+     * Overí vstupné údaje formulára.
+     * Nastaví chybové správy a vráti true len ak sú všetky údaje platné.
      */
     private fun validateInputs(): Boolean {
-        // Reset predchádzajúcich chýb
         emailError = null
         firstNameError = null
         lastNameError = null
@@ -57,74 +75,71 @@ class RegViewModel : ViewModel() {
         var isValid = true
 
         if (firstName.isBlank()) {
-            firstNameError = "Krstné meno je povinné"
+            firstNameError = "First name is required"
             isValid = false
         }
 
         if (lastName.isBlank()) {
-            lastNameError = "Priezvisko je povinné"
+            lastNameError = "Last name is required"
             isValid = false
         }
 
         if (email.isBlank()) {
-            emailError = "Email je povinný"
+            emailError = "Email is required"
             isValid = false
         } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailError = "Neplatný formát emailu"
+            emailError = "Invalid email format"
             isValid = false
         }
 
         if (ageString.isNotBlank()) {
             val ageValue = ageString.toIntOrNull()
             if (ageValue == null || ageValue <= 0 || ageValue > 120) {
-                ageError = "Neplatný vek"
+                ageError = "Invalid age"
                 isValid = false
             }
         }
 
         if (password.isBlank()) {
-            passwordError = "Heslo je povinné"
+            passwordError = "Password is required"
             isValid = false
         } else if (password.length < 6) {
-            passwordError = "Heslo musí mať aspoň 6 znakov"
+            passwordError = "Password must be at least 6 characters"
             isValid = false
         }
 
         if (confirmPassword.isBlank()) {
-            confirmPasswordError = "Potvrdenie hesla je povinné"
+            confirmPasswordError = "Password confirmation is required"
             isValid = false
         } else if (password != confirmPassword) {
-            confirmPasswordError = "Heslá sa nezhodujú"
+            confirmPasswordError = "Passwords do not match"
             isValid = false
         }
 
         return isValid
     }
 
-
     /**
-     * Registruje nového používateľa pomocou emailu a hesla
-     * a ukladá jeho profilové dáta do Firestore.
-     * @param onRegistrationSuccess Lambda funkcia, ktorá sa zavolá po úspešnej registrácii.
+     * Spustí proces registrácie používateľa.
+     * Vytvorí účet vo Firebase a uloží údaje do Firestore.
+     * Volá spätnú väzbu po úspešnej registrácii.
      */
     fun registerUser(onRegistrationSuccess: () -> Unit) {
         if (!validateInputs()) {
-            registrationStatus = "Prosím, opravte chyby vo formulári."
+            registrationStatus = "Please fix the errors in the form."
             return
         }
 
         isLoading = true
-        registrationStatus = null // Reset predchádzajúceho stavu
+        registrationStatus = null
 
         viewModelScope.launch {
             try {
-
                 val authResult = auth.createUserWithEmailAndPassword(email, password).await()
                 val firebaseUser = authResult.user
 
                 if (firebaseUser != null) {
                     Log.d("RegistrationViewModel", "User created successfully: ${firebaseUser.uid}")
-
 
                     val ageIntValue = if (ageString.isBlank()) null else ageString.toIntOrNull()
                     val userProfile = UserRegRequest(
@@ -138,35 +153,34 @@ class RegViewModel : ViewModel() {
 
                     db.collection("users").document(firebaseUser.uid)
                         .set(userProfile)
-                        .await() // Počkáme na dokončenie operácie
+                        .await()
 
                     Log.d("RegistrationViewModel", "User profile saved to Firestore for UID: ${firebaseUser.uid}")
-                    registrationStatus = "Registrácia úspešná pre: $firstName $lastName"
+                    registrationStatus = "Registration successful for: $firstName $lastName"
                     isLoading = false
-                    onRegistrationSuccess() // Zavolanie callbacku po úspechu
-
+                    onRegistrationSuccess()
                 } else {
-                    // Tento prípad by nemal nastať, ak createUserWithEmailAndPassword bol úspešný bez výnimky
-                    registrationStatus = "Chyba pri registrácii: Používateľ nebol vytvorený."
+                    registrationStatus = "Registration error: User was not created."
                     Log.e("RegistrationViewModel", "Firebase user is null after successful authResult.")
                     isLoading = false
                 }
 
             } catch (e: FirebaseAuthUserCollisionException) {
-                // Chyba: Email je už zaregistrovaný
-                emailError = "Tento email je už zaregistrovaný."
-                registrationStatus = "Registrácia zlyhala: Email už existuje."
+                emailError = "This email is already registered."
+                registrationStatus = "Registration failed: Email already exists."
                 Log.w("RegistrationViewModel", "Registration failed: email already in use.", e)
                 isLoading = false
             } catch (e: Exception) {
-                // Iné chyby (napr. problém so sieťou, slabé heslo podľa pravidiel Firebase atď.)
-                registrationStatus = "Chyba pri registrácii: ${e.localizedMessage ?: "Neznáma chyba"}"
+                registrationStatus = "Registration error: ${e.localizedMessage ?: "Unknown error"}"
                 Log.e("RegistrationViewModel", "Registration failed with exception", e)
                 isLoading = false
             }
         }
     }
 
+    /**
+     * Vymaže všetky polia formulára a resetuje chybové správy a stav registrácie.
+     */
     fun clearForm() {
         email = ""
         firstName = ""

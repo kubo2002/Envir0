@@ -1,4 +1,4 @@
-package com.example.semestralnapracaenviro.ui.theme
+package com.example.semestralnapracaenviro.screens.theme
 
 import androidx.compose.ui.graphics.Color
 
