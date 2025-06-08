@@ -17,10 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.semestralnapracaenviro.R
 import com.example.semestralnapracaenviro.data.model.ReportData
 import com.example.semestralnapracaenviro.screens.report.DumpSitesViewModel
 import com.google.android.gms.maps.model.CameraPosition
@@ -61,10 +63,10 @@ fun MapScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Dump Sites") },
+                title = { Text(stringResource(R.string.dump_sites_title)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Filled.ArrowBack, contentDescription = stringResource(R.string.back_text))
                     }
                 }
             )
@@ -96,7 +98,7 @@ fun MapScreen(
                         val position = LatLng(geoPoint.latitude, geoPoint.longitude)
                         Marker(
                             state = rememberMarkerState(position = position),
-                            title = "Site",
+                            title = stringResource(R.string.site_text),
                             snippet = site.description.take(50) + "...",
 
                             onClick = {
@@ -136,7 +138,7 @@ fun MapScreen(
     selectedDumpSite?.let { site ->
         AlertDialog(
             onDismissRequest = { selectedDumpSite = null },
-            title = { Text("Details") },
+            title = { Text(stringResource(R.string.dump_site_details)) },
             text = {
                 Column {
                     Text("Description: ${site.description}")
@@ -161,14 +163,14 @@ fun MapScreen(
                             color = MaterialTheme.colorScheme.onPrimary
                         )
                     } else {
-                        Text("Mark as Cleaned")
+                        Text(stringResource(R.string.mark_as_cleaned))
                     }
                 }
                 Button(
                     onClick = { selectedDumpSite = null },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32))
                 ) {
-                    Text("Close")
+                    Text(stringResource(R.string.close_text))
                 }
             },
             icon = { Icon(Icons.Filled.Info, contentDescription = null) }

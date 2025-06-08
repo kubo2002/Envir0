@@ -11,11 +11,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.semestralnapracaenviro.R
 import com.example.semestralnapracaenviro.navigation.ScreenRoute
 
 /**
@@ -57,12 +59,12 @@ fun ProfileScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("My Profile") },
+                title = { Text(stringResource(R.string.profile_screen_title)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.back_text)
                         )
                     }
                 },
@@ -95,7 +97,7 @@ fun ProfileScreen(
                     ) {
 
                         Text(
-                            text = userProfile!!.firstName ?: "User",
+                            text = userProfile!!.firstName ?: stringResource(R.string.user_text),
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black,
@@ -120,7 +122,7 @@ fun ProfileScreen(
                                 contentColor = Color(0xFF2E7D32)
                             )
                         ) {
-                            Text("Log out")
+                            Text(stringResource(R.string.logout_button_text))
                         }
                     }
                 }
@@ -129,13 +131,6 @@ fun ProfileScreen(
                     Text(
                         "Error: $error",
                         color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-
-                else -> {
-                    Text(
-                        "User profile not available.",
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }

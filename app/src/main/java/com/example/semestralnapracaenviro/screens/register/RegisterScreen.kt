@@ -34,8 +34,10 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import com.example.semestralnapracaenviro.R
 
 /**
  * Composable obrazovka pre registráciu nového používateľa.
@@ -84,7 +86,7 @@ fun RegisterScreen(
         ) {
             // Nadpis obrazovky
             Text(
-                text = "Create Account",
+                text = stringResource(R.string.create_account_text),
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color(0xFF2E7D32),
                 modifier = Modifier
@@ -98,7 +100,7 @@ fun RegisterScreen(
             OutlinedTextField(
                 value = regViewModel.firstName,
                 onValueChange = { regViewModel.firstName = it },
-                placeholder = { Text("First Name") },
+                placeholder = { Text(stringResource(R.string.first_name_input_placeholder)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 isError = regViewModel.firstNameError != null,
@@ -115,7 +117,7 @@ fun RegisterScreen(
             OutlinedTextField(
                 value = regViewModel.lastName,
                 onValueChange = { regViewModel.lastName = it },
-                placeholder = { Text("Last Name") },
+                placeholder = { Text(stringResource(R.string.last_name_input_placeholder)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 isError = regViewModel.lastNameError != null,
@@ -132,7 +134,7 @@ fun RegisterScreen(
             OutlinedTextField(
                 value = regViewModel.ageString,
                 onValueChange = { regViewModel.ageString = it },
-                placeholder = { Text("Age") },
+                placeholder = { Text(stringResource(R.string.age_input_placeholder)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -150,7 +152,7 @@ fun RegisterScreen(
             OutlinedTextField(
                 value = regViewModel.email,
                 onValueChange = { regViewModel.email = it },
-                placeholder = { Text("Email") },
+                placeholder = { Text(stringResource(R.string.email_input_placeholder)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -168,7 +170,7 @@ fun RegisterScreen(
             OutlinedTextField(
                 value = regViewModel.password,
                 onValueChange = { regViewModel.password = it },
-                placeholder = { Text("Password") },
+                placeholder = { Text(stringResource(R.string.password_input_placeholder)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
@@ -187,7 +189,7 @@ fun RegisterScreen(
             OutlinedTextField(
                 value = regViewModel.confirmPassword,
                 onValueChange = { regViewModel.confirmPassword = it },
-                placeholder = { Text("Confirm password") },
+                placeholder = { Text(stringResource(R.string.confirm_password_input_placeholder)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
@@ -218,7 +220,7 @@ fun RegisterScreen(
                         color = Color.White
                     )
                 } else {
-                    Text("Sign up", color = Color.White)
+                    Text(stringResource(R.string.signup_button), color = Color.White)
                 }
             }
 
@@ -230,7 +232,7 @@ fun RegisterScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Divider(modifier = Modifier.weight(1f), color = Color.Gray)
-                Text("  or  ", color = Color.Gray)
+                Text(stringResource(R.string.or_text), color = Color.Gray)
                 Divider(modifier = Modifier.weight(1f), color = Color.Gray)
             }
 
@@ -246,7 +248,7 @@ fun RegisterScreen(
                 border = BorderStroke(1.dp, Color(0xFF2E7D32)),
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF2E7D32))
             ) {
-                Text("Log in")
+                Text(stringResource(R.string.login_button))
             }
         }
     }

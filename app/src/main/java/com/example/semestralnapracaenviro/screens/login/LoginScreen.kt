@@ -16,11 +16,13 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.semestralnapracaenviro.R
 import com.example.semestralnapracaenviro.navigation.ScreenRoute
 
 /**
@@ -71,7 +73,7 @@ fun LoginScreen(
                 .fillMaxWidth()
         ) {
             Text(
-                text = "Welcome back",
+                text = stringResource(R.string.welcome_back_title),
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color(0xFF2E7D32), // tmavozelená
                 modifier = Modifier
@@ -85,7 +87,7 @@ fun LoginScreen(
             OutlinedTextField(
                 value = loginViewModel.email,
                 onValueChange = { loginViewModel.email = it },
-                placeholder = { Text("Email") },
+                placeholder = { Text(stringResource(R.string.email_input_placeholder)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 isError = loginViewModel.emailError != null,
@@ -103,7 +105,7 @@ fun LoginScreen(
             OutlinedTextField(
                 value = loginViewModel.password,
                 onValueChange = { loginViewModel.password = it },
-                placeholder = { Text("Password") },
+                placeholder = { Text(stringResource(R.string.password_input_placeholder)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
@@ -135,7 +137,7 @@ fun LoginScreen(
                         color = Color.White
                     )
                 } else {
-                    Text("Log in", color = Color.White)
+                    Text(stringResource(R.string.log_in_button_text), color = Color.White)
                 }
             }
         }

@@ -1,3 +1,88 @@
 <resources>
     <string name="app_name">SemestralnaPracaEnviro</string>
+
+    <!-- MainScreen -->
+
+    <string name="main_screen_title">Main Screen</string>
+    <string name="report_button_text">Report Dump</string>"
+    <string name="map_button_text">Show Map</string>
+    <string name="profile_button_text">Profile</string>
+
+    <!-- LoginScreen -->
+    <string name="welcome_back_title">Welcome back!</string>
+    <string name="email_input_placeholder">Email</string>
+    <string name="password_input_placeholder">Password</string>
+    <string name="log_in_button_text">Log in</string>
+    <string name="invalid_email_error">Invalid email format</string>"
+    <string name="invalid_password_error">Password must be at least 6 characters long</string>"
+    <string name="login_successful_message">Login successful</string>
+    <string name="login_failed_message">Login failed</string>"
+    <string name="loading_message">Loading...</string>""
+    <string name="registration_screen_title">Registration</string>"
+
+    <!-- MapScreen -->
+    <string name="map_screen_title">Map</string>
+    <string name="dump_sites_title">Dump Sites</string>
+    <string name="back_text">Back</string>
+    <string name="site_text">Site</string>
+    <string name="description_text">Description</string>
+    <string name="accessibility_text">Accessibility</string>
+    <string name="reported_text">Reported</string>
+    <string name="mark_as_cleaned_text">Mark as Cleaned</string>
+    <string name="mark_as_cleaned_loading_text">Marking as Cleaned...</string>
+    <string name="mark_as_cleaned_success_text">Marked as Cleaned</string>
+    <string name="mark_as_cleaned_error_text">Error marking as Cleaned</string>
+    <string name="close_text">Close</string>
+
+    <!-- ProfileScreen -->
+    <string name="profile_screen_title">My Profile</string>
+    <string name="logout_button_text">Log out</string>
+    <string name="logout_success_message">Logout successful</string>
+    <string name="logout_failed_message">Logout failed</string>
+    <string name="user_text">User</string>
+
+    <!-- RegisterScreen -->
+    <string name="register_screen_title">Registration</string>
+    <string name="first_name_input_placeholder">First name</string>
+    <string name="last_name_input_placeholder">Last name</string>
+    <string name="registration_successful_message">Registration successful</string>
+    <string name="registration_failed_message">Registration failed</string>
+    <string name="age_input_placeholder">Age</string>
+    <string name="confirm_password_input_placeholder">Confirm password</string>
+
+    <!-- Report -->
+    <string name="loading">Loading...</string>
+    <string name="error_loading_data">Error loading data: %1$s</string>
+    <string name="error_deleting_site">Error deleting site: %1$s</string>
+    <string name="error_invalid_id">The dump site has no valid ID and cannot be removed.</string>
+    <string name="success_marked_as_cleaned">The dump site has been successfully marked as cleaned.</string>
+    <string name="no_dump_sites_found">No dump sites found.</string>
+    <string name="mark_as_cleaned">Mark as cleaned</string>
+    <string name="confirm_delete">Are you sure you want to mark this dump site as cleaned?</string>
+    <string name="dump_site_details">Details</string>
+    <string name="score_updated">You earned %1$d points for cleaning the site!</string>
+    <string name="report_dump_title">Report Dump</string>
+    <string name="description_label">Description</string>
+    <string name="accessibility_level_label">Accessibility level</string>
+    <string name="accessibility_easy">Easily accessible</string>
+    <string name="accessibility_medium">Moderately accessible</string>
+    <string name="accessibility_hard">Difficult to access</string>
+    <string name="report_button">Report Dump</string>
+    <string name="permission_location_denied">Location permission denied. Please enable it in settings.</string>
+    <string name="status_dump_reported">Dump site has been reported!</string>
+    <string name="status_location_failed">Failed to obtain location. Please try again.</string>
+    <string name="toast_dump_reported">Dump site has been reported!</string>
+    <string name="toast_error">%1$s</string>
+    <string name="confirm_navigation">Navigate back to main screen?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="create_account_text">Create an account</string>
+    <string name="or_text">  or  </string>
+    <!-- Welcome Screen -->
+    <string name="app_title">Envir0</string>
+    <string name="app_slogan">Small action. Big impact.</string>
+    <string name="login_button">Log in</string>
+    <string name="signup_button">Sign up</string>
+
+
 </resources>

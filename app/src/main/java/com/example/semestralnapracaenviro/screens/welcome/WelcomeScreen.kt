@@ -9,12 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.semestralnapracaenviro.R
 import com.example.semestralnapracaenviro.navigation.ScreenRoute
 import com.example.semestralnapracaenviro.screens.theme.SemestralnaPracaEnviroTheme
 
@@ -56,7 +58,7 @@ fun WelcomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Envir0",
+                    text = stringResource(R.string.app_title),
                     fontSize = 36.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF2E7D32),
@@ -66,7 +68,7 @@ fun WelcomeScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Small action. Big impact.",
+                    text = stringResource(R.string.app_slogan),
                     fontSize = 14.sp,
                     color = Color.Gray,
                     modifier = Modifier
@@ -83,7 +85,7 @@ fun WelcomeScreen(
                     shape = RoundedCornerShape(25.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32))
                 ) {
-                    Text("Log in", color = Color.White)
+                    Text(stringResource(R.string.login_button), color = Color.White)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -97,7 +99,7 @@ fun WelcomeScreen(
                     border = BorderStroke(1.dp, Color(0xFF2E7D32)),
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF2E7D32))
                 ) {
-                    Text("Sign up")
+                    Text(stringResource(R.string.signup_button))
                 }
             }
         }

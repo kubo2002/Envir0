@@ -17,11 +17,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.semestralnapracaenviro.R
 import com.example.semestralnapracaenviro.data.model.AccessibilityLevel
 import com.example.semestralnapracaenviro.navigation.ScreenRoute
 
@@ -116,7 +118,7 @@ fun ReportDumpScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    "Report Dump",
+                    stringResource(R.string.report_dump_title),
                     style = MaterialTheme.typography.headlineSmall,
                     color = Color(0xFF388E3C),
                     modifier = Modifier
@@ -127,12 +129,12 @@ fun ReportDumpScreen(
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text("Description") },
+                    label = { Text(stringResource(R.string.description_text)) },
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 Text(
-                    text = "Accessibility level",
+                    text = stringResource(R.string.accessibility_text),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -155,9 +157,9 @@ fun ReportDumpScreen(
                         )
                         Text(
                             text = when (level) {
-                                AccessibilityLevel.EASY -> "Easily accessible"
-                                AccessibilityLevel.MEDIUM -> "Moderately accessible"
-                                AccessibilityLevel.HARD -> "Difficult to access"
+                                AccessibilityLevel.EASY -> stringResource(R.string.accessibility_easy)
+                                AccessibilityLevel.MEDIUM -> stringResource(R.string.accessibility_medium)
+                                AccessibilityLevel.HARD -> stringResource(R.string.accessibility_hard)
                             },
                             modifier = Modifier.padding(start = 8.dp)
                         )
@@ -202,7 +204,7 @@ fun ReportDumpScreen(
                     ),
                     shape = RoundedCornerShape(24.dp)
                 ) {
-                    Text("Report Dump")
+                    Text(stringResource(R.string.report_button_text))
                 }
             }
         }

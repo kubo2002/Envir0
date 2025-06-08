@@ -9,10 +9,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.semestralnapracaenviro.R
 import com.example.semestralnapracaenviro.navigation.ScreenRoute
 import com.example.semestralnapracaenviro.screens.map.MainScreenViewModel
 
@@ -50,7 +52,7 @@ fun MainScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Envir0",
+                text = stringResource(R.string.app_title),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     color = Color(0xFF2E7D32),
                     fontSize = 36.sp
@@ -63,7 +65,7 @@ fun MainScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Welcome back!",
+                text = stringResource(R.string.welcome_back_title),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = Color(0xFF2E7D32)
                 ),
@@ -85,7 +87,7 @@ fun MainScreen(
                     .height(48.dp)
                     .shadow(4.dp, shape = RoundedCornerShape(24.dp))
             ) {
-                Text("Report Dump", color = Color.White)
+                Text(stringResource(R.string.report_button), color = Color.White)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -101,7 +103,7 @@ fun MainScreen(
                     .height(48.dp)
                     .shadow(4.dp, shape = RoundedCornerShape(24.dp))
             ) {
-                Text("Show Map", color = Color.White)
+                Text(stringResource(R.string.map_button_text), color = Color.White)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -117,7 +119,7 @@ fun MainScreen(
                     .height(48.dp)
                     .shadow(4.dp, shape = RoundedCornerShape(24.dp))
             ) {
-                Text("Profile", color = Color.White)
+                Text(stringResource(R.string.profile_button_text), color = Color.White)
             }
         }
     }
