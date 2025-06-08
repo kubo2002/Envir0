@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SemestralnaPracaEnviro"
         tools:targetApi="31">
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBt0fnkqlKu8r8f9GgEBnF3_D5IhBKZm70" />
@@ -22,7 +23,8 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.SemestralnaPracaEnviro">
+            android:theme="@style/Theme.SemestralnaPracaEnviro"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
