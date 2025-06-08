@@ -1,6 +1,5 @@
-# Envir0
 
-# 🌳 Moja Enviro Aplikácia ☀️
+# 🌳 Envir0 ☀️
 
 Táto aplikácia slúži na nahlasovanie ilegálnych skládok a znečistených oblastí.
 Používateľ môže tiež pomáhať ako dobrovoľník pri ich čistení.
